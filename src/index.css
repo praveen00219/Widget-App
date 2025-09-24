@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 255 255 255;
+  --fg: 17 24 39;
+  --card: 249 250 251;
+  --muted: 107 114 128;
+  --ring: 59 130 246;
+}
+
+:root[data-theme="dark"] {
+  --bg: 17 24 39;
+  --fg: 243 244 246;
+  --card: 31 41 55;
+  --muted: 156 163 175;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-bg text-fg antialiased;
+}
