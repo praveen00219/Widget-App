@@ -24,3 +24,8 @@ html, body, #root {
 body {
   @apply bg-bg text-fg antialiased;
 }
+
+/* Subtle scroll track like reference */
+::-webkit-scrollbar { height: 10px; width: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }

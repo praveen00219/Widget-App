@@ -1,17 +1,30 @@
+import { useEffect } from 'react'
+import { useDashboardStore } from './store/dashboard'
+import { CategorySection } from './components/CategorySection'
+import { Topbar } from './components/Topbar'
+import { AddWidgetModal } from './components/AddWidgetModal'
+import { useState } from 'react'
+
 function App() {
+  const categories = useDashboardStore((s) => s.categories)
+  const seedIfEmpty = useDashboardStore((s) => s.seedIfEmpty)
+
+  useEffect(() => {
+    seedIfEmpty()
+  }, [seedIfEmpty])
+
+  const [open, setOpen] = useState(false)
+  const [categoryForAdd, setCategoryForAdd] = useState<string | undefined>()
+
   return (
     <div className="min-h-screen bg-bg text-fg">
-      <header className="h-16 border-b border-black/5 flex items-center px-6">
-        <div className="font-semibold">Dashboard v1</div>
-        <div className="ml-auto text-sm text-muted">Scaffold ready</div>
-      </header>
-      <main className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-xl shadow-soft bg-card h-40" />
-          <div className="rounded-xl shadow-soft bg-card h-40" />
-          <div className="rounded-xl shadow-soft bg-card h-40" />
-        </div>
+      <Topbar onAdd={() => { setCategoryForAdd(undefined); setOpen(true) }} />
+      <main className="p-6 space-y-8">
+        {categories.map((cat) => (
+          <CategorySection key={cat.id} id={cat.id} onAdd={(cid) => { setCategoryForAdd(cid); setOpen(true) }} />
+        ))}
       </main>
+      <AddWidgetModal open={open} onClose={() => setOpen(false)} defaultCategoryId={categoryForAdd} />
     </div>
   )
 }
