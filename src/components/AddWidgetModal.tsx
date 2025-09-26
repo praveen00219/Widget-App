@@ -15,6 +15,7 @@ const TABS = [
 export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
   const categories = useDashboardStore((s) => s.categories)
   const addWidget = useDashboardStore((s) => s.addWidget)
+  const removeWidget = useDashboardStore((s) => s.removeWidget)
   const search = useDashboardStore((s) => s.searchQuery)
 
   const [activeTab, setActiveTab] = useState('cspm')
@@ -77,13 +78,23 @@ export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
           </div>
           <div className="space-y-2 max-h-48 overflow-auto pr-1">
             {filtered.map((w) => {
-              const disabled = existing.has(`${targetCategoryId}|${w.name}`)
+              const key = `${targetCategoryId}|${w.name}`
+              const isChecked = existing.has(key)
               return (
-                <label key={w.key} className={`flex items-center gap-2 text-sm ${disabled ? 'opacity-50' : ''}`}>
+                <label key={w.key} className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
-                    disabled={disabled}
-                    onChange={(e) => e.target.checked && addWidget(targetCategoryId, { name: w.name, description: 'Random text' })}
+                    checked={isChecked}
+                    onChange={(e) => {
+                      const checked = e.target.checked
+                      if (checked && !isChecked) {
+                        addWidget(targetCategoryId, { name: w.name, description: 'Random text' })
+                      } else if (!checked && isChecked) {
+                        const cat = categories.find((c) => c.id === targetCategoryId)
+                        const wid = cat?.widgets.find((x) => x.name === w.name)?.id
+                        if (wid) removeWidget(targetCategoryId, wid)
+                      }
+                    }}
                   />
                   {w.name}
                 </label>
