@@ -6,6 +6,7 @@ export type Widget = {
   id: string
   name: string
   description: string
+  chart?: { type: 'donut' | 'bars' }
 }
 
 export type Category = {
@@ -23,7 +24,10 @@ type DashboardActions = {
   setSearchQuery: (q: string) => void
   addCategory: (name: string) => string
   removeCategory: (categoryId: string) => void
-  addWidget: (categoryId: string, input: { name: string; description: string }) => string
+  addWidget: (
+    categoryId: string,
+    input: { name: string; description: string; chart?: { type: 'donut' | 'bars' } },
+  ) => string
   removeWidget: (categoryId: string, widgetId: string) => void
   seedIfEmpty: () => void
 }
@@ -75,7 +79,12 @@ export const useDashboardStore = create<DashboardState & DashboardActions>()(
       removeCategory: (categoryId) =>
         set((s) => ({ categories: s.categories.filter((c) => c.id !== categoryId) })),
       addWidget: (categoryId, input) => {
-        const widget: Widget = { id: nanoid(), name: input.name, description: input.description }
+        const widget: Widget = {
+          id: nanoid(),
+          name: input.name,
+          description: input.description,
+          chart: input.chart,
+        }
         set((s) => ({
           categories: s.categories.map((c) =>
             c.id === categoryId ? { ...c, widgets: [...c.widgets, widget] } : c,

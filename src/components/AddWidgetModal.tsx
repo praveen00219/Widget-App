@@ -21,6 +21,7 @@ export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
   const [targetCategoryId, setTargetCategoryId] = useState(defaultCategoryId || categories[1]?.id || '')
   const [name, setName] = useState('')
   const [text, setText] = useState('')
+  const [chartType, setChartType] = useState<'none' | 'donut' | 'bars'>('none')
 
   const existing = useMemo(() => {
     return new Set(categories.flatMap((c) => c.widgets.map((w) => `${c.id}|${w.name}`)))
@@ -95,15 +96,24 @@ export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
               <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Widget name" className="h-9 px-3 rounded-lg border border-black/10 bg-white shadow-sm text-sm" />
               <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Widget text" className="h-9 px-3 rounded-lg border border-black/10 bg-white shadow-sm text-sm" />
             </div>
+            <div className="mt-3 flex items-center gap-3 text-sm">
+              <div className="text-muted">Chart</div>
+              <select value={chartType} onChange={(e) => setChartType(e.target.value as any)} className="h-9 px-3 rounded-lg border border-black/10 bg-white shadow-sm text-sm">
+                <option value="none">None</option>
+                <option value="donut">Donut</option>
+                <option value="bars">Severity Bars</option>
+              </select>
+            </div>
             <div className="mt-3 flex justify-end gap-2">
               <button className="h-9 px-3 rounded-lg border border-black/10 bg-white text-sm" onClick={onClose}>Cancel</button>
               <button
                 className="h-9 px-4 rounded-lg bg-ring text-white text-sm"
                 onClick={() => {
                   if (!targetCategoryId || !name) return
-                  addWidget(targetCategoryId, { name, description: text || 'Random text' })
+                  addWidget(targetCategoryId, { name, description: text || 'Random text', chart: chartType === 'none' ? undefined : { type: chartType } })
                   setName('')
                   setText('')
+                  setChartType('none')
                   onClose()
                 }}
               >
