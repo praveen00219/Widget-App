@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import { useDashboardStore } from '../store/dashboard'
 import type { Widget } from '../store/dashboard'
 import { Donut } from './charts/Donut'
-import { SeverityBars } from './charts/SeverityBarsSimple'
+import { SeverityBars } from './charts/SeverityBars'
 
 export function WidgetCard({ categoryId, widget }: { categoryId: string; widget: Widget }) {
   const removeWidget = useDashboardStore((s) => s.removeWidget)
