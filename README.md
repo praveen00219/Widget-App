@@ -23,21 +23,32 @@ A dynamic dashboard that renders categories and widgets from JSON data, with the
 
 Prerequisites: Node 18+
 
-1. Install dependencies
+1. Clone the repository
+
+```bash
+git clone https://github.com/praveen00219/Widget-App.git
+cd Widget-App
+```
+
+2. Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Run the dev server
+3. Run the dev server
 
 ```bash
 npm run dev
 ```
 
-3. Open the app
+4. Open the app
 
 - The terminal will print a local URL (usually `http://localhost:5173`).
+
+
+## Live 
+- The website has also been deployed on netlify and is accessible here: [live](https://widget-app-accuknox.netlify.app)
 
 ## Usage
 
