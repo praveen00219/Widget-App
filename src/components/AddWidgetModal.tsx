@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { X } from 'lucide-react'
 import { useDashboardStore } from '../store/dashboard'
+import { widgetCatalog } from '../data/catalog'
 
 type Props = { open: boolean; onClose: () => void; defaultCategoryId?: string }
 
@@ -21,15 +22,17 @@ export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
   const [name, setName] = useState('')
   const [text, setText] = useState('')
 
-  const allWidgets = useMemo(() => {
-    return categories.flatMap((c) => c.widgets.map((w) => ({ ...w, categoryId: c.id, categoryName: c.name })))
+  const existing = useMemo(() => {
+    return new Set(categories.flatMap((c) => c.widgets.map((w) => `${c.id}|${w.name}`)))
   }, [categories])
 
+  const catalogForTab = widgetCatalog[activeTab as keyof typeof widgetCatalog] || []
+  const list = catalogForTab.map((n) => ({ key: `${targetCategoryId}|${n}`, name: n }))
+
   const filtered = useMemo(() => {
-    if (!search) return allWidgets
-    const q = search.toLowerCase()
-    return allWidgets.filter((w) => w.name.toLowerCase().includes(q))
-  }, [allWidgets, search])
+    const q = (search || '').toLowerCase()
+    return list.filter((w) => w.name.toLowerCase().includes(q))
+  }, [list, search])
 
   // Keep selected category in sync when opener suggests one
   if (open && defaultCategoryId && targetCategoryId !== defaultCategoryId) {
@@ -72,12 +75,19 @@ export function AddWidgetModal({ open, onClose, defaultCategoryId }: Props) {
             </select>
           </div>
           <div className="space-y-2 max-h-48 overflow-auto pr-1">
-            {filtered.slice(0, 6).map((w) => (
-              <label key={w.id} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" onChange={(e) => e.target.checked && addWidget(targetCategoryId, { name: w.name, description: w.description })} />
-                {w.name}
-              </label>
-            ))}
+            {filtered.map((w) => {
+              const disabled = existing.has(`${targetCategoryId}|${w.name}`)
+              return (
+                <label key={w.key} className={`flex items-center gap-2 text-sm ${disabled ? 'opacity-50' : ''}`}>
+                  <input
+                    type="checkbox"
+                    disabled={disabled}
+                    onChange={(e) => e.target.checked && addWidget(targetCategoryId, { name: w.name, description: 'Random text' })}
+                  />
+                  {w.name}
+                </label>
+              )
+            })}
           </div>
           <div className="mt-4">
             <div className="text-sm font-medium mb-2">Or add a custom widget</div>

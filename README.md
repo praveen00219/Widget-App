@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# AccuKnox Widget Dashboard (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A dynamic dashboard that renders categories and widgets from JSON data, with the ability to add/remove widgets per category, search across widgets, and persist state locally.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Dynamic categories (CNAPP, CSPM, CWPP, Registry)
+- Add/Remove widgets in any category
+- Modal to add widgets with tabs, search, and duplication guard
+- Create custom widget (name + text)
+- Global search filters widgets and hides empty sections
+- Local persistence (reload-safe)
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS
+- Zustand (state + persistence)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Prerequisites: Node 18+
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Install dependencies
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Run the dev server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+3. Open the app
+
+- The terminal will print a local URL (usually `http://localhost:5173`).
+
+## Usage
+
+- Use the search box in the top bar to filter widgets in real time.
+- Click “Add Widget” in the top bar or inside a category to open the modal.
+- In the modal, pick a tab, select widgets to add, or create a custom one by entering a name and text, then click Confirm.
+- Remove a widget using the cross icon on the card.
+
+## Project Structure
+
+- `src/store/dashboard.ts`: Zustand store, seed data, add/remove actions
+- `src/components/Topbar.tsx`: Top navigation with search and Add Widget
+- `src/components/CategorySection.tsx`: Category header and grid
+- `src/components/WidgetCard.tsx`: Widget card with remove
+- `src/components/AddWidgetModal.tsx`: Modal with tabs, search, and custom widget
+- `src/data/catalog.ts`: Catalog of available widgets per tab
+
+## Notes
+
+- All state is saved to `localStorage` under key `accuknox-dashboard`.
+- Tailwind tokens are set in `src/index.css` and extended in `tailwind.config.js`.
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
